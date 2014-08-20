@@ -64,3 +64,19 @@ var error = function() {
 
 machine.fetchMorePosts(success, error);
 ```
+
+### Photos
+
+##### getPhotoForPost(postOrPostId) 
+
+```javascript
+/* 
+ * Returns the photo for a single post
+ *
+ * @params
+ *
+ * postOrPostId: Either the entire post object or a post ID
+*/
+
+machine.getPhotoForPost(1425);
+```
