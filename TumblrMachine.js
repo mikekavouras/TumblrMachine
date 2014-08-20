@@ -27,14 +27,14 @@ TumblrMachine.prototype = {
           success(self.posts);
         }
       } else {
-        console.error("TumblrMaching: There was an error fetching posts.");
+        console.error("TumblrMachine: There was an error fetching posts.");
       }
     });
   },
 
   fetchMorePosts: function(success, error) {
     if (this.posts.length === this.totalPosts) {
-      console.error("TumblrMaching: No more posts.");
+      console.error("TumblrMachine: No more posts.");
     }
     this.fetchPosts(success, error, this.nextPageUrl());
   },
