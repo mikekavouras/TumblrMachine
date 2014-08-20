@@ -3,10 +3,11 @@ TumblrMachine
 
 Easy interface for any Tumblr blog
 
-### Initializer: 
+### Initializer
 
 ```javascript
-/*
+/* Creates a new instance of TumblrMachine
+ *
  * @params
  
  * name: Name of the Tumblr blog
@@ -22,11 +23,32 @@ var machine = new TumblrMachine(name, apiKey, fetch, onReady);
 ### Fetching Posts
 ```javascript
 /*
+ * Fetches the first set of posts
+ * 
  * @params
- * success (optional): Success callback. Recieves the new posts as a first argument
+ *
+ * success (optional): Success callback. Recieves the new posts as a first parameter
  * error (optional): Error callback
- * url (optional): Internal use for pagination
+ * url (optional): Internal use. Leave blank unless you know what you're doing
 */
 
-machine.fetchPosts(success, error, url)
+var success = function(newPosts) {
+ console.log(newPosts);
+}
+var error = function() {
+ console.log("Something went wrong");
+}
+
+machine.fetchPosts(success, error);
+
+/* 
+ * Fetches subsequent sets of posts
+ *
+ * @params
+ *
+ * success (optional): Success callback. Receives the new posts (Array) as a first parameter
+ * error (optional): Error callback
+*/
+
+machine.fetchMorePosts(success, error);
 ```
