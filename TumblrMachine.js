@@ -79,7 +79,6 @@ TumblrMachine.prototype = {
     var posts = [];
     for (var i = 0; i < ts.length; i++) {
       var tag = ts[i].toLowerCase();
-
       posts.concat(this.postsForTag(tag));
     }
     return posts;
