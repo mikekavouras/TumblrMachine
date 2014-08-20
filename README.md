@@ -8,8 +8,7 @@ Easy interface for any Tumblr blog
 ```javascript
 /* Creates a new instance of TumblrMachine
  *
- * @params
- 
+ * @param:
  * name: Name of the Tumblr blog
  * apiKey: The API key (https://www.tumblr.com/oauth/apps)
  * fetch (optional): Whether or not you want to fetch posts immediately
@@ -29,7 +28,6 @@ var machine = new TumblrMachine(name, apiKey, fetch, onReady);
  * Fetch the first set of posts
  * 
  * @params
- *
  * success (optional): Success callback. Recieves the new posts as a first parameter
  * error (optional): Error callback
  * url (optional): Internal use. Leave blank unless you know what you're doing
