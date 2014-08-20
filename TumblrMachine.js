@@ -1,7 +1,7 @@
 /*
  * TumblrMachine: by Mike Kavouras
  *
- * Version: 0.1
+ * Version: 0.2
  * Tumblr API Version: 2.0
 */
 
@@ -39,11 +39,21 @@ TumblrMachine.prototype = {
     this.fetchPosts(success, error, this.nextPageUrl());
   },
 
-  photoForPost: function(post) {
+  getPhotoForPost: function(postOrPostId) {
+    var post = postOrPostId;
+    if (typeof(post) === "number") {
+      post = this.getPostById(postOrPostId);
+    }
+
+    if (typeof(post) === "undefined") {
+      console.error("TumblrMachine: The post requested does not exist");
+      return null;
+    }
+
     return post.type === "photo" ? post.photos[0].original_size.url : post.thumbnail_url;
   },
 
-  photosForPosts: function(numberOrRange) {
+  getPhotosForPosts: function(numberOrRange) {
     var photos = [];
 
     var range = this.rangePointsFromNumberOrRange(numberOrRange);
@@ -54,20 +64,20 @@ TumblrMachine.prototype = {
 
     for (var i = range.start; i < range.end; i++) {
       var post = this.posts[i];
-      photos.push(this.photoForPost(post));
+      photos.push(this.getPhotoForPost(post));
     }
 
     return photos;
   },
 
-  tagsForPost: function(post) {
-    return post.tags.map(function(tag) { return tags.toLowerCase(); });
+  getTagsForPost: function(post) {
+    return post.tags.map(function(tag) { return tag.toLowerCase(); });
   },
 
-  postsForTag: function(t) {
+  getPostsForTag: function(t) {
     var posts = [];
     for (var i = 0; i < this.posts.length; i++) {
-      var tags = this.tagsForPost(this.posts[i]);
+      var tags = this.getTagsForPost(this.posts[i]);
       if (tags.indexOf(t) >= 0) {
         posts.push(this.posts[i]);
       }
@@ -75,13 +85,24 @@ TumblrMachine.prototype = {
     return posts;
   },
 
-  postsForTags: function(ts) {
+  getPostsForTags: function(ts) {
     var posts = [];
     for (var i = 0; i < ts.length; i++) {
       var tag = ts[i].toLowerCase();
-      posts.concat(this.postsForTag(tag));
+      posts = posts.concat(this.getPostsForTag(tag));
     }
     return posts;
+  },
+
+  getPostById: function(id) {
+    var post;
+    for (var i = 0; i < this.posts.length; i++) {
+      if (this.posts[i].id === id) {
+        post = this.posts[i];
+        break;
+      }
+    }
+    return post;
   },
 
   nextPageUrl: function() {
@@ -136,3 +157,8 @@ TumblrMachine.prototype = {
   }
 }
 
+
+var name = "dolphinhood";
+var apiKey = "B9enqZ1SESmqJ6NNbRuUcdj7nMDm9Vu8HI4zBhzsc7OLI5yZTz";
+
+var tumblr = new TumblrMachine(name, apiKey, true);
