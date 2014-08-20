@@ -5,7 +5,7 @@ Easy interface for any Tumblr blog
 
 ### Initializer: 
 
-``` 
+```javascript
 /*
  * @params
  
