@@ -20,10 +20,13 @@ var machine = new TumblrMachine(name, apiKey, fetch, onReady);
 
 ```
 
-### Fetching Posts
+### Fetching Posts  
+
+##### fetchPosts(success, error)  
+
 ```javascript
 /*
- * Fetches the first set of posts
+ * Fetch the first set of posts
  * 
  * @params
  *
@@ -49,6 +52,13 @@ machine.fetchPosts(success, error);
  * success (optional): Success callback. Receives the new posts (Array) as a first parameter
  * error (optional): Error callback
 */
+
+var success = function(newPosts) {
+ console.log(newPosts);
+}
+var error = function() {
+ console.log("Something went wrong");
+}
 
 machine.fetchMorePosts(success, error);
 ```
