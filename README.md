@@ -22,7 +22,7 @@ var machine = new TumblrMachine(name, apiKey, fetch, onReady);
 
 ### Fetching Posts  
 
-##### fetchPosts(success, error)  
+##### fetchPosts(success, error, url)  
 
 ```javascript
 /*
@@ -43,7 +43,11 @@ var error = function() {
 }
 
 machine.fetchPosts(success, error);
+```
 
+##### fetchMorePosts(success, error)  
+
+```javascript
 /* 
  * Fetches subsequent sets of posts
  *
