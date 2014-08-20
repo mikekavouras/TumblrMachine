@@ -61,7 +61,7 @@ TumblrMachine.prototype = {
   },
 
   tagsForPost: function(post) {
-    return post.tags;
+    return post.tags.map(function(tag) { return tags.toLowerCase(); });
   },
 
   postsForTag: function(t) {
@@ -78,14 +78,9 @@ TumblrMachine.prototype = {
   postsForTags: function(ts) {
     var posts = [];
     for (var i = 0; i < ts.length; i++) {
-      var tag = ts[i];
+      var tag = ts[i].toLowerCase();
 
-      for (var j = 0; j < this.posts.length; j++) {
-        var tags = this.tagsForPost(this.posts[j]);
-        if (tags.indexOf(tag) >= 0) {
-          posts.push(this.posts[j]);
-        }
-      }
+      posts.concat(this.postsForTag(tag));
     }
     return posts;
   },
