@@ -6,8 +6,8 @@
 */
 
 function TumblrMachine(name, apiKey, fetch, onReady) {
-	this.urlRoot = "https://api.tumblr.com/v2/blog/" + name + ".tumblr.com"
-	this.postsUrl = this.urlRoot + "/posts?api_key=" + apiKey + "&callback=?";
+  this.urlRoot = "https://api.tumblr.com/v2/blog/" + name + ".tumblr.com"
+  this.postsUrl = this.urlRoot + "/posts?api_key=" + apiKey + "&callback=?";
   this.posts = [];
   this.totalPosts = 0;
 
@@ -17,9 +17,9 @@ function TumblrMachine(name, apiKey, fetch, onReady) {
 }
 
 TumblrMachine.prototype = {
-	fetchPosts: function(success, error, url) {
+  fetchPosts: function(success, error, url) {
     var self = this;
-		$.getJSON(url || this.postsUrl, function(r) {
+    $.getJSON(url || this.postsUrl, function(r) {
       self.posts =  self.posts.concat(r.response.posts);
       self.totalPosts = r.response.total_posts;
       if (r.meta.status === 200) {
@@ -30,7 +30,7 @@ TumblrMachine.prototype = {
         console.error("TumblrMaching: There was an error fetching posts.");
       }
     });
-	},
+  },
 
   fetchMorePosts: function(success, error) {
     if (this.posts.length === this.totalPosts) {
@@ -58,7 +58,7 @@ TumblrMachine.prototype = {
     }
 
     return photos;
-  }, 
+  },
 
   tagsForPost: function(post) {
     return post.tags;
@@ -111,7 +111,7 @@ TumblrMachine.prototype = {
     }
 
     return {
-      start: start, 
+      start: start,
       end: end
     }
 
@@ -120,15 +120,15 @@ TumblrMachine.prototype = {
   startFromNumberOrRange: function(numberOrRange) {
     if (Object.prototype.toString.call(numberOrRange) === "[object Array]" && numberOrRange.length === 2) {
       return numberOrRange[0];
-    } 
+    }
     return 0;
   },
 
   endFromNumberOrRange: function(numberOrRange) {
     // If numberOrRange is a number we want to use it as the limit
     if (typeof(numberOrRange) === "number") {
-      return Math.min(numberOrRange, this.posts.length); 
-    } 
+      return Math.min(numberOrRange, this.posts.length);
+    }
 
     // If numberOrRange is an array we want to use numberOrRange[1] and the limit
     else if (Object.prototype.toString.call(numberOrRange) === "[object Array]" && numberOrRange.length === 2) {
