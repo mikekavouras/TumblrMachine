@@ -14,20 +14,24 @@ Easy interface for any Tumblr blog
  * apiKey: The API key (https://www.tumblr.com/oauth/apps)
  * fetch (optional): Whether or not you want to fetch posts immediately
  * onReady (optional): Success callback after posts have been fetched
+ *
+ * Discussion:
+ * You may set the fetch parameter to true without implementing the onReady callback.
+ * But the onReady callback will only be executed if fetch is set to true
 */
 
 var machine = new TumblrMachine(name, apiKey, fetch, onReady);
 
 ```
 
-### Fetching Posts  
+### Fetching Posts
 
-##### fetchPosts(success, error, url)  
+##### fetchPosts(success, error, url)
 
 ```javascript
 /*
  * Fetch the first set of posts
- * 
+ *
  * @params
  *
  * success (optional): Success callback. Recieves the new posts as a first parameter
@@ -45,10 +49,10 @@ var error = function() {
 machine.fetchPosts(success, error);
 ```
 
-##### fetchMorePosts(success, error)  
+##### fetchMorePosts(success, error)
 
 ```javascript
-/* 
+/*
  * Fetches subsequent sets of posts
  *
  * @params
@@ -69,10 +73,10 @@ machine.fetchMorePosts(success, error);
 
 ### Photos
 
-##### getPhotoForPost(postOrPostId) 
+##### getPhotoForPost(postOrPostId)
 
 ```javascript
-/* 
+/*
  * Returns the photo for a single post
  *
  * @params
