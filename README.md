@@ -22,6 +22,7 @@ var machine = new TumblrMachine(name, apiKey, fetch, onReady);
 
 
 **Discussion:**
+
 You may set the fetch parameter to true without implementing the onReady callback.
 But the onReady callback will only be executed if fetch is set to true.
 
