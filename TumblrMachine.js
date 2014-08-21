@@ -5,19 +5,6 @@
  * Tumblr API Version: 2.0
 */
 
-// Convenience
-Object.prototype.isArray = function(o) {
-  return Object.prototype.toString.call(o) === "[object Array]";
-}
-Object.prototype.isObject = function(o) {
-  return Object.prototype.toString.call(o) === "[object Object]";
-}
-Object.prototype.isString = function(o) {
-  return Object.prototype.toString.call(o) === "[object String]";
-}
-Object.prototype.isNumber = function(o) {
-  return Object.prototype.toString.call(o) === "[object Number]";
-}
 
 
 function TumblrMachine(name, apiKey, fetch, onReady) {
@@ -144,8 +131,16 @@ TumblrMachine.prototype = {
   }
 }
 
-
-var name = "dolphinhood";
-var apiKey = "B9enqZ1SESmqJ6NNbRuUcdj7nMDm9Vu8HI4zBhzsc7OLI5yZTz";
-
-var tumblr = new TumblrMachine(name, apiKey, true);
+// Convenience
+Object.prototype.isArray = function(o) {
+  return Object.prototype.toString.call(o) === "[object Array]";
+}
+Object.prototype.isObject = function(o) {
+  return Object.prototype.toString.call(o) === "[object Object]";
+}
+Object.prototype.isString = function(o) {
+  return Object.prototype.toString.call(o) === "[object String]";
+}
+Object.prototype.isNumber = function(o) {
+  return Object.prototype.toString.call(o) === "[object Number]";
+}
