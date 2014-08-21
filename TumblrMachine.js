@@ -5,6 +5,21 @@
  * Tumblr API Version: 2.0
 */
 
+// Convenience
+Object.prototype.isArray = function(o) {
+  return Object.prototype.toString.call(o) === "[object Array]";
+}
+Object.prototype.isObject = function(o) {
+  return Object.prototype.toString.call(o) === "[object Object]";
+}
+Object.prototype.isString = function(o) {
+  return Object.prototype.toString.call(o) === "[object String]";
+}
+Object.prototype.isNumber = function(o) {
+  return Object.prototype.toString.call(o) === "[object Number]";
+}
+
+
 function TumblrMachine(name, apiKey, fetch, onReady) {
   this.urlRoot = "https://api.tumblr.com/v2/blog/" + name + ".tumblr.com"
   this.postsUrl = this.urlRoot + "/posts?api_key=" + apiKey + "&callback=?";
@@ -39,9 +54,8 @@ TumblrMachine.prototype = {
     this.fetchPosts(success, error, this.nextPageUrl());
   },
 
-  getPhotoForPost: function(postOrPostId) {
-    var post = postOrPostId;
-    if (typeof(post) === "number") {
+  photoForPost: function(post) {
+    if (Object.isNumber(post)) {
       post = this.getPostById(postOrPostId);
     }
 
@@ -53,31 +67,51 @@ TumblrMachine.prototype = {
     return post.type === "photo" ? post.photos[0].original_size.url : post.thumbnail_url;
   },
 
-  getPhotosForPosts: function(numberOrRange) {
+  photosForPosts: function(arg) {
+    var posts = this.posts;
     var photos = [];
 
-    var range = this.rangePointsFromNumberOrRange(numberOrRange);
+    if (Object.isNumber(arg)) {
+      posts = this.posts.slice(0, Math.min(arg, this.posts.length));
+    } else if (Object.isArray(arg)) {
 
-    if ( ! range) {
-      return null;
+      // empty array
+      if ( ! arg.length) {
+        console.error("TumblrMachine: photosForPosts - invalid arguments");
+        return [];
+      }
+
+      var arr = arg;
+      if (Object.isNumber(arr[0]) && arr.length === 2) {
+        posts = this.posts.slice(arr[0], Math.min(arr[1], this.posts.length));
+      } else if (Object.isObject(arr[0])) {
+        posts = arr;
+      } else {
+        consle.error("TumblrMachine: photosForPosts - invalid arguments");
+        return [];
+      }
     }
 
-    for (var i = range.start; i < range.end; i++) {
-      var post = this.posts[i];
-      photos.push(this.getPhotoForPost(post));
+    if ( ! posts.length) {
+      return [];
+    }
+
+    for (var i = 0; i < posts.length; i++) {
+      var post = posts[i];
+      photos.push(this.photoForPost(post));
     }
 
     return photos;
   },
 
-  getTagsForPost: function(post) {
+  tagsForPost: function(post) {
     return post.tags.map(function(tag) { return tag.toLowerCase(); });
   },
 
-  getPostsForTag: function(t) {
+  postsForTag: function(t) {
     var posts = [];
     for (var i = 0; i < this.posts.length; i++) {
-      var tags = this.getTagsForPost(this.posts[i]);
+      var tags = this.tagsForPost(this.posts[i]);
       if (tags.indexOf(t) >= 0) {
         posts.push(this.posts[i]);
       }
@@ -85,7 +119,7 @@ TumblrMachine.prototype = {
     return posts;
   },
 
-  getPostsForTags: function(ts) {
+  postsForTags: function(ts) {
     var posts = [];
     for (var i = 0; i < ts.length; i++) {
       var tag = ts[i].toLowerCase();
@@ -107,53 +141,6 @@ TumblrMachine.prototype = {
 
   nextPageUrl: function() {
     return this.postsUrl + "&before_id=" + this.posts[this.posts.length - 1].id;
-  },
-
-  rangePointsFromNumberOrRange: function(numberOrRange) {
-    var start;
-    var end;
-
-    if (numberOrRange) {
-      start = this.startFromNumberOrRange(numberOrRange);
-      end = this.endFromNumberOrRange(numberOrRange);
-    } else {
-      start = 0;
-      end = this.posts.length;
-    }
-
-    if ( ! end ) {
-      return null;
-    }
-
-    return {
-      start: start,
-      end: end
-    }
-
-  },
-
-  startFromNumberOrRange: function(numberOrRange) {
-    if (Object.prototype.toString.call(numberOrRange) === "[object Array]" && numberOrRange.length === 2) {
-      return numberOrRange[0];
-    }
-    return 0;
-  },
-
-  endFromNumberOrRange: function(numberOrRange) {
-    // If numberOrRange is a number we want to use it as the limit
-    if (typeof(numberOrRange) === "number") {
-      return Math.min(numberOrRange, this.posts.length);
-    }
-
-    // If numberOrRange is an array we want to use numberOrRange[1] and the limit
-    else if (Object.prototype.toString.call(numberOrRange) === "[object Array]" && numberOrRange.length === 2) {
-      return Math.min(numberOrRange[1], this.posts.length);
-    }
-
-    else {
-      console.error("TumblrMachine: Invalid argument");
-      return null;
-    }
   }
 }
 
