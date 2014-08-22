@@ -9,8 +9,8 @@ function TumblrMachine(name, apiKey, fetch, onReady) {
   this._blogName = name;
   this._apiKey = apiKey;
   this._posts = [];
-  this._totalPostsCount = null;
   this._limit = 100;
+  this._totalPostsCount;
 
   this.fetchPosts = function(a, b, c) {
 
@@ -153,10 +153,8 @@ TumblrMachine.prototype = {
     $.getJSON(url, function(r) {
       self._posts = self._posts.concat(r.response.posts);
       self._totalPostsCount = r.response.total_posts;
-      if (r.meta.status === 200) {
-        if (success) {
-          success(self._posts);
-        }
+      if (r.meta.status === 200 && success) {
+        success(self._posts);
       } else {
         console.error("TumblrMachine: There was an error fetching posts.");
       }
