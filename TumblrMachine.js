@@ -33,7 +33,9 @@ function TumblrMachine(name, apiKey, fetch, onReady) {
   this.fetchMorePosts = function(success, error) {
     if (this._posts.length === this._totalPostsCount) {
       console.error("TumblrMachine: No more posts.");
-      success(this._posts);
+      if (success) {
+        success(this._posts);
+      } 
     } else {
       this.fetchPosts(success, error);
     }
@@ -153,8 +155,10 @@ TumblrMachine.prototype = {
     $.getJSON(url, function(r) {
       self._posts = self._posts.concat(r.response.posts);
       self._totalPostsCount = r.response.total_posts;
-      if (r.meta.status === 200 && success) {
-        success(self._posts);
+      if (r.meta.status === 200) {
+        if (success) {
+          success(self._posts);
+        }
       } else {
         console.error("TumblrMachine: There was an error fetching posts.");
       }
