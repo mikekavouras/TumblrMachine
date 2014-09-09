@@ -20,11 +20,11 @@ function TumblrMachine(name, apiKey, fetch, onReady) {
     }
 
     // if params && isFunction
-    else if (a && Object.isFunction(a)) {
+    else if (a && TumblrMachine.isFunction(a)) {
       this.__fetchPosts(a, b);
     }
 
-    else if (a && Object.isNumber(a)) {
+    else if (a && TumblrMachine.isNumber(a)) {
       // this.__fetchNumberOfPosts(a, b, c);
     }
 
@@ -35,14 +35,14 @@ function TumblrMachine(name, apiKey, fetch, onReady) {
       console.error("TumblrMachine: No more posts.");
       if (success) {
         success(this._posts);
-      } 
+      }
     } else {
       this.fetchPosts(success, error);
     }
   };
 
   this.imageForPost = function(post) {
-    if (Object.isNumber(post)) {
+    if (TumblrMachine.isNumber(post)) {
       post = this.__getPostById(postOrPostId);
     }
 
@@ -58,9 +58,9 @@ function TumblrMachine(name, apiKey, fetch, onReady) {
     var posts = this._posts;
     var photos = [];
 
-    if (Object.isNumber(arg)) {
+    if (TumblrMachine.isNumber(arg)) {
       posts = this._posts.slice(0, Math.min(arg, this._posts.length));
-    } else if (Object.isArray(arg)) {
+    } else if (TumblrMachine.isArray(arg)) {
 
       // empty array
       if ( ! arg.length) {
@@ -69,9 +69,9 @@ function TumblrMachine(name, apiKey, fetch, onReady) {
       }
 
       var arr = arg;
-      if (Object.isNumber(arr[0]) && arr.length === 2) {
+      if (TumblrMachine.isNumber(arr[0]) && arr.length === 2) {
         posts = this._posts.slice(arr[0], Math.min(arr[1], this._posts.length));
-      } else if (Object.isObject(arr[0])) {
+      } else if (TumblrMachine.isObject(arr[0])) {
         posts = arr;
       } else {
         consle.error("TumblrMachine: imagesForPosts - invalid argument");
@@ -191,18 +191,18 @@ TumblrMachine.prototype = {
 }
 
 // Convenience
-Object.prototype.isArray = function(x) {
+TumblrMachine.prototype.isArray = function(x) {
   return Object.prototype.toString.call(x) === "[object Array]";
 }
-Object.prototype.isObject = function(x) {
+TumblrMachine.prototype.isObject = function(x) {
   return Object.prototype.toString.call(x) === "[object Object]";
 }
-Object.prototype.isString = function(x) {
+TumblrMachine.prototype.isString = function(x) {
   return Object.prototype.toString.call(x) === "[object String]";
 }
-Object.prototype.isNumber = function(x) {
+TumblrMachine.prototype.isNumber = function(x) {
   return Object.prototype.toString.call(x) === "[object Number]";
 }
-Object.prototype.isFunction = function(x) {
+TumblrMachine.prototype.isFunction = function(x) {
   return Object.prototype.toString.call(x) === "[object Function]";
 }
