@@ -20,11 +20,11 @@ function TumblrMachine(name, apiKey, fetch, onReady) {
     }
 
     // if params && isFunction
-    else if (a && TumblrMachine.isFunction(a)) {
+    else if (a && TumblrMachine.prototype.isFunction(a)) {
       this.__fetchPosts(a, b);
     }
 
-    else if (a && TumblrMachine.isNumber(a)) {
+    else if (a && TumblrMachine.prototype.isNumber(a)) {
       // this.__fetchNumberOfPosts(a, b, c);
     }
 
@@ -42,7 +42,7 @@ function TumblrMachine(name, apiKey, fetch, onReady) {
   };
 
   this.imageForPost = function(post) {
-    if (TumblrMachine.isNumber(post)) {
+    if (TumblrMachine.prototype.isNumber(post)) {
       post = this.__getPostById(postOrPostId);
     }
 
@@ -58,9 +58,9 @@ function TumblrMachine(name, apiKey, fetch, onReady) {
     var posts = this._posts;
     var photos = [];
 
-    if (TumblrMachine.isNumber(arg)) {
+    if (TumblrMachine.prototype.isNumber(arg)) {
       posts = this._posts.slice(0, Math.min(arg, this._posts.length));
-    } else if (TumblrMachine.isArray(arg)) {
+    } else if (TumblrMachine.prototype.isArray(arg)) {
 
       // empty array
       if ( ! arg.length) {
@@ -69,9 +69,9 @@ function TumblrMachine(name, apiKey, fetch, onReady) {
       }
 
       var arr = arg;
-      if (TumblrMachine.isNumber(arr[0]) && arr.length === 2) {
+      if (TumblrMachine.prototype.isNumber(arr[0]) && arr.length === 2) {
         posts = this._posts.slice(arr[0], Math.min(arr[1], this._posts.length));
-      } else if (TumblrMachine.isObject(arr[0])) {
+      } else if (TumblrMachine.prototype.isObject(arr[0])) {
         posts = arr;
       } else {
         consle.error("TumblrMachine: imagesForPosts - invalid argument");
