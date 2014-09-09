@@ -1,7 +1,7 @@
 /*
  * TumblrMachine: by Mike Kavouras
  *
- * Version: 0.3
+ * Version: 0.4
  * Tumblr API Version: 2.0
 */
 
