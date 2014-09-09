@@ -110,7 +110,7 @@ function TumblrMachine(name, apiKey, fetch, onReady) {
     var posts = [];
     for (var i = 0; i < ts.length; i++) {
       var tag = ts[i].toLowerCase();
-      posts = posts.concat(this.getPostsForTag(tag));
+      posts = posts.concat(this.postsForTag(tag));
     }
     return posts;
   };
