@@ -37,8 +37,12 @@ function TumblrMachine(name, apiKey, fetch, onReady) {
         success(this._posts);
       }
     } else {
-      this.fetchPosts(success, error);
+      this.__fetchNextPageOfPosts(success, error);
     }
+  };
+
+  this.fetchAllPosts = function(success, error) {
+    // TODO: unFINISHED
   };
 
   this.imageForPost = function(post) {
@@ -58,13 +62,17 @@ function TumblrMachine(name, apiKey, fetch, onReady) {
     var posts = this._posts;
     var photos = [];
 
+    if ( ! TumblrMachine.prototype.isNumber(arg) || ! TumblrMachine.prototype.isArray(arg)) {
+      console.error("TumblrMachine: imagesForPosts - invalid argument");
+      return;
+    }
+
     if (TumblrMachine.prototype.isNumber(arg)) {
       posts = this._posts.slice(0, Math.min(arg, this._posts.length));
     } else if (TumblrMachine.prototype.isArray(arg)) {
 
       // empty array
       if ( ! arg.length) {
-        console.error("TumblrMachine: imagesForPosts - invalid argument");
         return [];
       }
 
@@ -91,14 +99,10 @@ function TumblrMachine(name, apiKey, fetch, onReady) {
     return photos;
   };
 
-  this.tagsForPost = function(post) {
-    return post.tags.map(function(tag) { return tag.toLowerCase(); });
-  };
-
   this.postsForTag = function(t) {
     var posts = [];
     for (var i = 0; i < this._posts.length; i++) {
-      var tags = this.tagsForPost(this._posts[i]);
+      var tags = this.__tagsForPost(this._posts[i]);
       if (tags.indexOf(t) >= 0) {
         posts.push(this._posts[i]);
       }
@@ -114,7 +118,6 @@ function TumblrMachine(name, apiKey, fetch, onReady) {
     }
     return posts;
   };
-
 
   if (fetch) {
     this.fetchPosts(onReady, null);
@@ -153,6 +156,7 @@ TumblrMachine.prototype = {
   __fetchPostsWithUrl: function(success, error, url) {
     var self = this;
     $.getJSON(url, function(r) {
+      self.__addHelperMethodsToPosts(r.response.posts);
       self._posts = self._posts.concat(r.response.posts);
       self._totalPostsCount = r.response.total_posts;
       if (r.meta.status === 200) {
@@ -163,6 +167,20 @@ TumblrMachine.prototype = {
         console.error("TumblrMachine: There was an error fetching posts.");
       }
     });
+  },
+
+  __addHelperMethodsToPosts: function(posts) {
+    var self = this;
+    for (var i = 0; i < posts.length; i++) {
+      posts[i].imageAsHTML = function() {
+        var photo = self.imageForPost(this);
+        return '<img src="'+ photo +'" />'
+      }
+    }
+  },
+
+  __tagsForPost: function(post) {
+    return post.tags.map(function(tag) { return tag.toLowerCase(); });
   },
 
   __apiUrl: function() {
@@ -182,6 +200,10 @@ TumblrMachine.prototype = {
   },
 
   __nextPageUrl: function() {
+    // make sure this isn't our first request
+    if ( ! this._totalPostsCount) {
+      return this.__postsUrl();
+    }
     return this.__postsUrl() + "&before_id=" + this._posts[this._posts.length - 1].id;
   },
 
